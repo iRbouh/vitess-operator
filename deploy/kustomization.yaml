@@ -12,12 +12,24 @@ resources:
 - crds/planetscale.com_vitessbackupstorages.yaml
 - crds/planetscale.com_etcdlockservers.yaml
 patches:
-- path: extra_pvcs.patch.json
+- path: patchs/vitessclusters_extra_pvcs.patch.json
   target:
     group: apiextensions.k8s.io
     version: v1
     kind: CustomResourceDefinition
     name: vitessclusters.planetscale.com
+- path: patchs/vitessshards_extra_pvcs.patch.json
+  target:
+    group: apiextensions.k8s.io
+    version: v1
+    kind: CustomResourceDefinition
+    name: vitessshards.planetscale.com
+- path: patchs/vitesskeyspaces_extra_pvcs.patch.json
+  target:
+    group: apiextensions.k8s.io
+    version: v1
+    kind: CustomResourceDefinition
+    name: vitesskeyspaces.planetscale.com
 images:
 - name: planetscale/vitess-operator
   newName: rbouh/vitess-operator
