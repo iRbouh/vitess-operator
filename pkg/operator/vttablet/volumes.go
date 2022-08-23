@@ -65,6 +65,28 @@ func init() {
 		}
 	})
 
+	// Mount extra data volume.
+	tabletVolumes.Add(func(s lazy.Spec) []corev1.Volume {
+		spec := s.(*Spec)
+		if spec.ExtraDataVolumePVCSpec == nil || len(spec.ExtraDataVolumePVCSpec) == 0 {
+			return nil
+		}
+
+		volumes := make([]corev1.Volume, 0, len(spec.ExtraDataVolumePVCSpec))
+
+		for name := range spec.ExtraDataVolumePVCSpec {
+			volumes = append(volumes, corev1.Volume{
+				Name: "pvc-" + name,
+				VolumeSource: corev1.VolumeSource{
+					PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+						ClaimName: spec.ExtraDataVolumePVCNames[name],
+					},
+				},
+			})
+		}
+		return volumes
+	})
+
 	// Add Volumes for secrets.
 	tabletVolumes.Add(func(s lazy.Spec) []corev1.Volume {
 		spec := s.(*Spec)

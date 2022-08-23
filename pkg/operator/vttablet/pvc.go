@@ -40,6 +40,23 @@ func NewPVC(key client.ObjectKey, spec *Spec) *corev1.PersistentVolumeClaim {
 	}
 }
 
+// NewExtraPVC creates a new vttablet PVC from a Spec.
+func NewExtraPVC(key client.ObjectKey, spec *Spec, name string) *corev1.PersistentVolumeClaim {
+	// Store labels in labels obj because we need to add extra label and avoid mutating spec.Labels value
+	labels := map[string]string{}
+	update.Labels(&labels, spec.Labels)
+	update.Labels(&labels, spec.ExtraLabels)
+
+	return &corev1.PersistentVolumeClaim{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: key.Namespace,
+			Name:      key.Name,
+			Labels:    labels,
+		},
+		Spec: *spec.ExtraDataVolumePVCSpec[name],
+	}
+}
+
 // UpdatePVCInPlace updates an existing vttablet PVC in-place.
 func UpdatePVCInPlace(obj *corev1.PersistentVolumeClaim, spec *Spec) {
 	// Update labels, but ignore existing ones we don't set.
@@ -51,6 +68,22 @@ func UpdatePVCInPlace(obj *corev1.PersistentVolumeClaim, spec *Spec) {
 	// The only in-place spec update that's possible is volume expansion.
 	curSize := obj.Spec.Resources.Requests[corev1.ResourceStorage]
 	newSize := spec.DataVolumePVCSpec.Resources.Requests[corev1.ResourceStorage]
+	if newSize.Cmp(curSize) > 0 {
+		obj.Spec.Resources.Requests[corev1.ResourceStorage] = newSize
+	}
+}
+
+// UpdateExtraPVCInPlace updates an existing vttablet PVC in-place.
+func UpdateExtraPVCInPlace(obj *corev1.PersistentVolumeClaim, spec *Spec, name string) {
+	// Update labels, but ignore existing ones we don't set.
+	update.Labels(&obj.Labels, spec.Labels)
+	// update extra labels
+	// TODO: Handle the case when labels are removed from ExtraLabels
+	update.Labels(&obj.Labels, spec.ExtraLabels)
+
+	// The only in-place spec update that's possible is volume expansion.
+	curSize := obj.Spec.Resources.Requests[corev1.ResourceStorage]
+	newSize := spec.ExtraDataVolumePVCSpec[name].Resources.Requests[corev1.ResourceStorage]
 	if newSize.Cmp(curSize) > 0 {
 		obj.Spec.Resources.Requests[corev1.ResourceStorage] = newSize
 	}

@@ -280,6 +280,16 @@ type VitessShardTabletPool struct {
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:pruning:PreserveUnknownFields
 	TopologySpreadConstraints []corev1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+
+	// ExtraDataVolumeClaimTemplate configures extra PersistentVolumeClaims that will be created
+	// for each tablet.
+	// This field is required for local MySQL, but should be omitted in the case of externally
+	// managed MySQL.
+	//
+	// IMPORTANT: For a tablet pool in a Kubernetes cluster that spans multiple
+	// zones, you should ensure that `volumeBindingMode: WaitForFirstConsumer`
+	// is set on the StorageClass specified in the storageClassName field here.
+	ExtraDataVolumeClaimTemplate map[string]*corev1.PersistentVolumeClaimSpec `json:"extraDataVolumeClaimTemplate,omitempty"`
 }
 
 // VttabletSpec configures the vttablet server within a tablet.

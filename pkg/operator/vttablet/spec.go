@@ -45,6 +45,8 @@ type Spec struct {
 	ExternalDatastore         *planetscalev2.ExternalDatastore
 	DataVolumePVCSpec         *corev1.PersistentVolumeClaimSpec
 	DataVolumePVCName         string
+	ExtraDataVolumePVCSpec    map[string]*corev1.PersistentVolumeClaimSpec
+	ExtraDataVolumePVCNames   map[string]string
 	GlobalLockserver          planetscalev2.VitessLockserverParams
 	DatabaseInitScriptSecret  planetscalev2.SecretSource
 	EnableSemiSync            bool

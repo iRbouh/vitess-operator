@@ -180,13 +180,13 @@ func UpdatePod(obj *corev1.Pod, spec *Spec) {
 				},
 			},
 			SecurityContext: securityContext,
-			ReadinessProbe:  &corev1.Probe{
-				Handler:             corev1.Handler{
+			ReadinessProbe: &corev1.Probe{
+				Handler: corev1.Handler{
 					TCPSocket: &corev1.TCPSocketAction{
 						Port: intstr.FromInt(planetscalev2.DefaultMysqlPort),
 					},
 				},
-			PeriodSeconds: 2,
+				PeriodSeconds: 2,
 			},
 			// TODO(enisoc): Add liveness probes that make sense for mysqld.
 			Env:          env,

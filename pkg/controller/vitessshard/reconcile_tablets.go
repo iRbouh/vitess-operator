@@ -18,6 +18,7 @@ package vitessshard
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -88,6 +89,7 @@ func (r *ReconcileVitessShard) reconcileTablets(ctx context.Context, vts *planet
 	pvcKeys := make([]client.ObjectKey, 0, len(tablets))
 	podKeys := make([]client.ObjectKey, 0, len(tablets))
 	tabletMap := make(map[client.ObjectKey]*vttablet.Spec, len(tablets))
+	extraPvcNames := make(map[client.ObjectKey]string, 0)
 	for _, tablet := range tablets {
 		podName := vttablet.PodName(clusterName, tablet.Alias)
 		key := client.ObjectKey{Namespace: vts.Namespace, Name: podName}
@@ -97,6 +99,20 @@ func (r *ReconcileVitessShard) reconcileTablets(ctx context.Context, vts *planet
 			tablet.DataVolumePVCName = podName
 
 			pvcKeys = append(pvcKeys, key)
+		}
+
+		if tablet.ExtraDataVolumePVCSpec != nil {
+			for name := range tablet.ExtraDataVolumePVCSpec {
+				extraDataVolumePVCName := fmt.Sprintf("%s-%s", podName, name)
+				localKey := client.ObjectKey{Namespace: vts.Namespace, Name: extraDataVolumePVCName}
+
+				extraPvcNames[localKey] = name
+				tablet.ExtraDataVolumePVCNames[name] = extraDataVolumePVCName
+
+				pvcKeys = append(pvcKeys, localKey)
+
+				tabletMap[localKey] = tablet
+			}
 		}
 
 		podKeys = append(podKeys, key)
@@ -122,10 +138,18 @@ func (r *ReconcileVitessShard) reconcileTablets(ctx context.Context, vts *planet
 			status.DataVolumeBound = corev1.ConditionFalse
 			vts.Status.Tablets[tablet.AliasStr] = status
 
+			if name, exists := extraPvcNames[key]; exists {
+				return vttablet.NewExtraPVC(key, tablet, name)
+			}
+
 			return vttablet.NewPVC(key, tablet)
 		},
 		UpdateInPlace: func(key client.ObjectKey, obj runtime.Object) {
 			curObj := obj.(*corev1.PersistentVolumeClaim)
+			if name, exists := extraPvcNames[key]; exists {
+				vttablet.UpdateExtraPVCInPlace(curObj, tabletMap[key], name)
+				return
+			}
 			vttablet.UpdatePVCInPlace(curObj, tabletMap[key])
 		},
 		Status: func(key client.ObjectKey, obj runtime.Object) {
