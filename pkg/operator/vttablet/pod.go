@@ -18,6 +18,7 @@ package vttablet
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -100,6 +101,19 @@ func UpdatePod(obj *corev1.Pod, spec *Spec) {
 	// Compute all operator-generated volume mounts first.
 	mysqldMounts := append(mysqldVolumeMounts.Get(spec), volumeMounts...)
 	vttabletMounts := append(vttabletVolumeMounts.Get(spec), volumeMounts...)
+	// Expand extra volumes mountPath and subPath with pod's env varibales
+	findEnv := func(name string) string {
+		for j := range env {
+			if env[j].Name == name && env[j].Value != "" {
+				return env[j].Value
+			}
+		}
+		return fmt.Sprintf("$%s", name)
+	}
+	for i := range spec.ExtraVolumeMounts {
+		spec.ExtraVolumeMounts[i].MountPath = os.Expand(spec.ExtraVolumeMounts[i].MountPath, findEnv)
+		spec.ExtraVolumeMounts[i].SubPath = os.Expand(spec.ExtraVolumeMounts[i].SubPath, findEnv)
+	}
 	// Then apply user-provided overrides last so they take precedence.
 	update.VolumeMounts(&mysqldMounts, spec.ExtraVolumeMounts)
 	update.VolumeMounts(&vttabletMounts, spec.ExtraVolumeMounts)
