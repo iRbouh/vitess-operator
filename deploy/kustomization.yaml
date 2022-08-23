@@ -18,3 +18,6 @@ patches:
     version: v1
     kind: CustomResourceDefinition
     name: vitessclusters.planetscale.com
+images:
+- name: planetscale/vitess-operator
+  newName: rbouh/vitess-operator
