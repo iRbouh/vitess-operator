@@ -214,6 +214,10 @@ func UpdatePod(obj *corev1.Pod, spec *Spec) {
 					Name:  "DATA_SOURCE_NAME",
 					Value: fmt.Sprintf("%s@unix(%s)/", mysqldExporterUser, mysqlSocketPath),
 				},
+				{
+					Name:  "TABLET_UID",
+					Value: fmt.Sprintf("%d", spec.Alias.Uid),
+				},
 			},
 			Ports: []corev1.ContainerPort{
 				{

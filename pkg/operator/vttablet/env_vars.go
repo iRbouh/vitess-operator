@@ -17,6 +17,7 @@ limitations under the License.
 package vttablet
 
 import (
+	"fmt"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -38,6 +39,10 @@ func init() {
 			{
 				Name:  "EXTRA_MY_CNF",
 				Value: strings.Join(extraMyCnf.Get(spec), ":"),
+			},
+			{
+				Name:  "TABLET_UID",
+				Value: fmt.Sprintf("%d", spec.Alias.Uid),
 			},
 		}
 	})
