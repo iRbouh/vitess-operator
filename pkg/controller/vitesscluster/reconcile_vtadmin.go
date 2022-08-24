@@ -213,6 +213,7 @@ func (r *ReconcileVitessCluster) vtadminSpecs(ctx context.Context, vt *planetsca
 			APIResources:      vt.Spec.VtAdmin.APIResources,
 			WebResources:      vt.Spec.VtAdmin.WebResources,
 			Affinity:          vt.Spec.VtAdmin.Affinity,
+			NodeSelector:      vt.Spec.VtAdmin.NodeSelector,
 			ExtraFlags:        extraFlags,
 			ExtraEnv:          vt.Spec.VtAdmin.ExtraEnv,
 			ExtraVolumes:      vt.Spec.VtAdmin.ExtraVolumes,

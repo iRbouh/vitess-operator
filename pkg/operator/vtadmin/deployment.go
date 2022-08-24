@@ -99,6 +99,7 @@ type Spec struct {
 	APIResources      corev1.ResourceRequirements
 	WebResources      corev1.ResourceRequirements
 	Affinity          *corev1.Affinity
+	NodeSelector      map[string]string
 	ExtraFlags        map[string]string
 	ExtraEnv          []corev1.EnvVar
 	ExtraVolumes      []corev1.Volume
@@ -300,6 +301,10 @@ func UpdateDeployment(obj *appsv1.Deployment, spec *Spec) {
 		}
 	} else {
 		obj.Spec.Template.Spec.Affinity = nil
+	}
+
+	if spec.NodeSelector != nil {
+		obj.Spec.Template.Spec.NodeSelector = spec.NodeSelector
 	}
 }
 
