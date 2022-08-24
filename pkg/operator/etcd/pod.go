@@ -83,6 +83,7 @@ type Spec struct {
 	InitContainers    []corev1.Container
 	SidecarContainers []corev1.Container
 	Affinity          *corev1.Affinity
+	NodeSelector      map[string]string
 	Annotations       map[string]string
 	ExtraLabels       map[string]string
 	AdvertisePeerURLs []string
@@ -297,6 +298,10 @@ func UpdatePod(obj *corev1.Pod, spec *Spec) {
 				},
 			})
 		}
+	}
+
+	if spec.NodeSelector != nil {
+		obj.Spec.NodeSelector = spec.NodeSelector
 	}
 
 	update.Tolerations(&obj.Spec.Tolerations, spec.Tolerations)

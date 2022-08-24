@@ -50,12 +50,18 @@ patches:
     version: v1
     kind: CustomResourceDefinition
     name: vitesskeyspaces.planetscale.com
-- path: patchs/vitesscells_node_selector.patch
+- path: patchs/vitesscells_node_selector.patch.json
   target:
     group: apiextensions.k8s.io
     version: v1
     kind: CustomResourceDefinition
     name: vitesscells.planetscale.com
+- path: patchs/etcdlockservers_node_selector.patch.json
+  target:
+    group: apiextensions.k8s.io
+    version: v1
+    kind: CustomResourceDefinition
+    name: etcdlockservers.planetscale.com
 images:
 - name: planetscale/vitess-operator
   newName: rbouh/vitess-operator
