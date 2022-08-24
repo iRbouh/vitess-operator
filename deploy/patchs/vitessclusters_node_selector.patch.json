@@ -28,5 +28,17 @@
           "type": "string"
         }
       }
+    },
+
+    {
+      "op": "add",
+      "path": "/spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/cells/items/properties/gateway/nodeSelector",
+      "value": {
+        "description": "Define which Nodes the Pods are scheduled on.",
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
     }
 ]

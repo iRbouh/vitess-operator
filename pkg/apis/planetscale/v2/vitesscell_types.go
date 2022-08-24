@@ -200,6 +200,12 @@ type VitessCellGatewaySpec struct {
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:pruning:PreserveUnknownFields
 	TopologySpreadConstraints []corev1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+
+	// NodeSelector is a selector which must be true for the pod to fit on a node.
+	// Selector which must match a node's labels for the pod to be scheduled on that node.
+	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,7,rep,name=nodeSelector"`
 }
 
 // VitessGatewayAuthentication configures authentication for vtgate in this cell.

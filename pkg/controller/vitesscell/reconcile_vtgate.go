@@ -133,6 +133,7 @@ func (r *ReconcileVitessCell) reconcileVtgate(ctx context.Context, vtc *planetsc
 		Authentication:            &vtc.Spec.Gateway.Authentication,
 		SecureTransport:           vtc.Spec.Gateway.SecureTransport,
 		Affinity:                  vtc.Spec.Gateway.Affinity,
+		NodeSelector:              vtc.Spec.Gateway.NodeSelector,
 		ExtraFlags:                extraFlags,
 		ExtraEnv:                  vtc.Spec.Gateway.ExtraEnv,
 		ExtraVolumes:              vtc.Spec.Gateway.ExtraVolumes,
