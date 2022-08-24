@@ -290,6 +290,12 @@ type VitessShardTabletPool struct {
 	// zones, you should ensure that `volumeBindingMode: WaitForFirstConsumer`
 	// is set on the StorageClass specified in the storageClassName field here.
 	ExtraDataVolumeClaimTemplate map[string]*corev1.PersistentVolumeClaimSpec `json:"extraDataVolumeClaimTemplate,omitempty"`
+
+	// NodeSelector is a selector which must be true for the pod to fit on a node.
+	// Selector which must match a node's labels for the pod to be scheduled on that node.
+	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,7,rep,name=nodeSelector"`
 }
 
 // VttabletSpec configures the vttablet server within a tablet.

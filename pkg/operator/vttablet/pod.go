@@ -386,6 +386,10 @@ func UpdatePod(obj *corev1.Pod, spec *Spec) {
 	if planetscalev2.DefaultVitessServiceAccount != "" {
 		obj.Spec.ServiceAccountName = planetscalev2.DefaultVitessServiceAccount
 	}
+
+	if spec.NodeSelector != nil {
+		obj.Spec.NodeSelector = spec.NodeSelector
+	}
 }
 
 // AliasFromPod returns a TabletAlias corresponding to a vttablet Pod.
