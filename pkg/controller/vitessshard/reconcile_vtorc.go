@@ -148,6 +148,7 @@ func (r *ReconcileVitessShard) vtorcSpecs(vts *planetscalev2.VitessShard, parent
 			Labels:            labels,
 			Resources:         vts.Spec.VitessOrchestrator.Resources,
 			Affinity:          vts.Spec.VitessOrchestrator.Affinity,
+			NodeSelector:      vts.Spec.VitessOrchestrator.NodeSelector,
 			ExtraFlags:        extraFlags,
 			ExtraEnv:          vts.Spec.VitessOrchestrator.ExtraEnv,
 			ExtraVolumes:      vts.Spec.VitessOrchestrator.ExtraVolumes,

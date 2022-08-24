@@ -16,5 +16,17 @@
         "op": "copy", 
         "from": "/spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/partitionings/items/properties/equal/properties/shardTemplate/properties/tabletPools/items/properties/nodeSelector", 
         "path": "/spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/partitionings/items/properties/custom/properties/shards/items/properties/tabletPools/items/properties/nodeSelector"
+    },
+
+    {
+      "op": "add",
+      "path": "/spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/vitessOrchestrator/nodeSelector",
+      "value": {
+        "description": "Define which Nodes the Pods are scheduled on.",
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
     }
 ]
